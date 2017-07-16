@@ -1,23 +1,18 @@
 package gcache
 
-type gdata interface {
-	Get()
-	Set()
-	GetType()
+type gdata struct {
+	key       string
+	value     interface{}
+	next      *gdata
+	valueType uint8
 }
 
-type gInt struct {
-	value int
+func (g *gdata) setValue(key string, valueType uint8, value interface{}) {
+	g.key = key
+	g.value = value
+	g.valueType = valueType
 }
 
-func (v *gInt) Get() int {
-	return v.value
-}
-
-func (v *gInt) Set(value int) {
-	v.value = value
-}
-
-func (v *gInt) GetType() string {
-	return "int"
+func (g *gdata) getValue() (uint8, interface{}) {
+	return g.valueType, g.value
 }

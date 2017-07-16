@@ -1,9 +1,13 @@
 package main
 
 import (
-	"gcache/gcache"
+	"fmt"
+	_ "reflect"
+	_ "strconv"
+	_ "unsafe"
 )
 
 func main() {
-	gcache.ServerInit()
+	x := []byte("12345")
+	fmt.Println(x[:4])
 }
