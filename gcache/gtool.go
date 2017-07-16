@@ -43,6 +43,9 @@ func hashValue(str *string, max *int) int {
 	return int(hash % uint32(*max))
 }
 
+/*
+ *检查类型
+ */
 func checkType(value []byte) (int, bool) {
 	//字符串
 	if len(value) > 2 && value[0] == '"' && value[len(value)-1] == '"' {
@@ -90,7 +93,9 @@ func interfaceToString(valueType uint8, value interface{}) string {
 	}
 }
 
-/**返回随机字符串**/
+/*
+ *返回随机字符串
+ */
 func randStr() string {
 	ret := md5.Sum([]byte(time.Now().String()))
 	return string(ret[:5])

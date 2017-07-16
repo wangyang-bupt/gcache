@@ -50,7 +50,9 @@ func ServerInit() {
 	}
 }
 
-/**处理到来的命令行事件**/
+/*
+ *处理到来的命令行事件
+ */
 func commandEvent() {
 	var command []byte
 	var response string
@@ -77,7 +79,9 @@ func commandEvent() {
 	}
 }
 
-/**处理一个连接**/
+/*
+ *处理一个连接
+ */
 func handleServerConn(gconn *gconnnect, gkey string) {
 	defer gconn.close()
 	defer delete(gconnArray, gkey)

@@ -18,6 +18,9 @@ func ClientInit() {
 	handleClientConn(&gconn)
 }
 
+/*
+ *处理连接
+ */
 func handleClientConn(gconn *gconnnect) {
 	defer gconn.close()
 
@@ -59,7 +62,9 @@ func handleClientConn(gconn *gconnnect) {
 	}
 }
 
-/** set命令 **/
+/*
+ *set命令
+ */
 func setCommand(inputArray [][]byte) ([]byte, bool) {
 	command := make([]byte, 0, 100)
 
@@ -92,7 +97,9 @@ func setCommand(inputArray [][]byte) ([]byte, bool) {
 	return command, true
 }
 
-/** get命令 **/
+/*
+ *get命令
+ */
 func getCommand(inputArray [][]byte) ([]byte, bool) {
 	command := make([]byte, 0, 100)
 

@@ -4,7 +4,9 @@ import (
 	"strconv"
 )
 
-/**set事件**/
+/*
+ *set命令
+ */
 func setEvent(db *gdb, key []byte, valueType int, value []byte) (string, bool) {
 	var realValue interface{}
 	var err error
@@ -53,7 +55,9 @@ func setEvent(db *gdb, key []byte, valueType int, value []byte) (string, bool) {
 	return STR_SUCC, true
 }
 
-/**get事件**/
+/*
+ *get事件
+ */
 func getEvent(db *gdb, key []byte) (string, bool) {
 	realKey := string(key)
 	hash := hashValue(&realKey, &db.size)
