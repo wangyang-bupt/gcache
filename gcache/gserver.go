@@ -16,7 +16,7 @@ var (
 
 func init() {
 	db.size = INIT_GDATA_NUM
-	db.gdatas = make([]gdata, INIT_GDATA_NUM)
+	db.gdatas = make([]*gdata, INIT_GDATA_NUM)
 	commandChan = make(chan []byte, 1000)
 	gconnArray = make(map[string]*gconnnect, MAX_CONNECT)
 	connectNum = 0
@@ -71,10 +71,14 @@ func commandEvent() {
 		case GET:
 			/**db key*/
 			response, success = getEvent(&db, commandArray[1])
+		case DELETE:
+			response, success = deleteEvent(&db, commandArray[1])
 		}
 
 		if success {
 			gconnArray[gKey].write([]byte(response))
+		} else {
+			gconnArray[gKey].write([]byte("operation fail"))
 		}
 	}
 }

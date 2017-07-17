@@ -40,6 +40,8 @@ func handleClientConn(gconn *gconnnect) {
 				transData, success = setCommand(inputArray)
 			case "get":
 				transData, success = getCommand(inputArray)
+			case "delete":
+				transData, success = deleteCommand(inputArray)
 			default:
 				success = false
 			}
@@ -109,6 +111,25 @@ func getCommand(inputArray [][]byte) ([]byte, bool) {
 
 	//命令参数 key 类型参数 value
 	command = append(command, GET)
+	command = append(command, DELIMITER)
+
+	command = append(command, inputArray[1]...)
+	command = append(command, DELIMITER)
+	return command, true
+}
+
+/*
+ *delete命令
+ */
+func deleteCommand(inputArray [][]byte) ([]byte, bool) {
+	command := make([]byte, 0, 100)
+
+	if len(inputArray) != 2 {
+		return nil, false
+	}
+
+	//命令参数 key 类型参数 value
+	command = append(command, DELETE)
 	command = append(command, DELIMITER)
 
 	command = append(command, inputArray[1]...)

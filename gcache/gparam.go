@@ -31,8 +31,9 @@ const (
 	/*
 	 *request command
 	 */
-	SET = 1
-	GET = 2
+	SET    = 1
+	GET    = 2
+	DELETE = 3
 
 	/*
 	 *respone command
