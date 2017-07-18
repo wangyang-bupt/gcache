@@ -56,7 +56,6 @@ func ServerInit() {
 func commandEvent() {
 	var command []byte
 	var response string
-	var success bool
 
 	for {
 		command = <-commandChan
@@ -70,16 +69,18 @@ func commandEvent() {
 			response, success = setEvent(&db, commandArray[1], int(commandArray[2][0]), commandArray[3])
 		case GET:
 			/**db key*/
-			response, success = getEvent(&db, commandArray[1])
+			response = getEvent(&db, commandArray[1])
 		case DELETE:
-			response, success = deleteEvent(&db, commandArray[1])
+			response = deleteEvent(&db, commandArray[1])
+        case TYPE:
+            response = typeEvent(&db, commandArray[1])
+        case INCR:
+            response = incrDecrEvent(&db, commandArray[1], INCR)
+        case DECR:
+            response = incrDecrEvent(&db, commandArray[1], DECR)
 		}
-
-		if success {
-			gconnArray[gKey].write([]byte(response))
-		} else {
-			gconnArray[gKey].write([]byte("operation fail"))
-		}
+			
+        gconnArray[gKey].write([]byte(response))
 	}
 }
 

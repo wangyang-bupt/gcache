@@ -35,16 +35,19 @@ func (g *gdb) setNode(key string, valueType uint8, value interface{}) bool {
 	return true
 }
 
-func (g *gdb) getNode(key string) (string, bool) {
+/*
+ *获取一个元素
+ */
+func (g *gdb) getNode(key string) (*gdata, bool) {
 	hash := hashValue(&key, &db.size)
 	node := g.gdatas[hash]
 
 	for {
 		if node == nil {
-			return "", true
+			return nil, true
 		}
 		if node.key == key {
-			return interfaceToString(node.getValue()), true
+			return node, true
 		}
 		node = node.next
 	}

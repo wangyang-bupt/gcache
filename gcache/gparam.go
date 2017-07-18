@@ -34,7 +34,9 @@ const (
 	SET    = 1
 	GET    = 2
 	DELETE = 3
-
+    TYPE   = 4
+    INCR   = 5
+    DECR   = 6 
 	/*
 	 *respone command
 	 */
