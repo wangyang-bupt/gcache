@@ -22,11 +22,9 @@ const (
 	/*
 	 *gdata
 	 */
-	TYPE_INT8    = 1
-	TYPE_INT32   = 2
-	TYPE_INT64   = 3
-	TYPE_FLOAT64 = 4
-	TYPE_STRING  = 5
+	TYPE_INT    = 1
+	TYPE_FLOAT  = 2
+	TYPE_STRING = 3
 
 	/*
 	 *request command
@@ -34,9 +32,9 @@ const (
 	SET    = 1
 	GET    = 2
 	DELETE = 3
-    TYPE   = 4
-    INCR   = 5
-    DECR   = 6 
+	TYPE   = 4
+	INCR   = 5
+	DECR   = 6
 	/*
 	 *respone command
 	 */

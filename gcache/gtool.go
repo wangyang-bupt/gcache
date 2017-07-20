@@ -53,21 +53,13 @@ func checkType(value []byte) (int, bool) {
 	}
 
 	str := string(value)
-	//int8
-	if _, err := strconv.ParseInt(str, 10, 8); err == nil {
-		return TYPE_INT8, true
-	}
-	//int32
-	if _, err := strconv.ParseInt(str, 10, 32); err == nil {
-		return TYPE_INT32, true
-	}
-	//int64
-	if _, err := strconv.ParseInt(str, 10, 64); err == nil {
-		return TYPE_INT64, true
+	//int
+	if _, err := strconv.Atoi(str); err == nil {
+		return TYPE_INT, true
 	}
 	//float
 	if _, err := strconv.ParseFloat(str, 64); err == nil {
-		return TYPE_FLOAT64, true
+		return TYPE_FLOAT, true
 	}
 
 	return 0, false
@@ -78,13 +70,9 @@ func checkType(value []byte) (int, bool) {
  */
 func interfaceToString(valueType uint8, value interface{}) string {
 	switch valueType {
-	case TYPE_INT8:
-		return strconv.FormatInt(value.(int64), 10)
-	case TYPE_INT32:
-		return strconv.FormatInt(value.(int64), 10)
-	case TYPE_INT64:
-		return strconv.FormatInt(value.(int64), 10)
-	case TYPE_FLOAT64:
+	case TYPE_INT:
+		return strconv.FormatInt(value.(int), 10)
+	case TYPE_FLOAT:
 		return strconv.FormatFloat(value.(float64), 'f', -1, 64)
 	case TYPE_STRING:
 		return "\"" + value.(string) + "\""
