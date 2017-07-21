@@ -7,20 +7,16 @@ import (
 /*
  *set命令
  */
-func setEvent(db *gdb, key []byte, valueType int, value []byte) string {
+func setEvent(db *gdb, key string, valueType int, value string) string {
 	var realValue interface{}
 	var err error
 	switch valueType {
-	case TYPE_INT8:
-		realValue, err = strconv.ParseInt(string(value), 10, 8)
-	case TYPE_INT32:
-		realValue, err = strconv.ParseInt(string(value), 10, 32)
-	case TYPE_INT64:
-		realValue, err = strconv.ParseInt(string(value), 10, 64)
-	case TYPE_FLOAT64:
-		realValue, err = strconv.ParseFloat(string(value), 64)
+	case TYPE_INT:
+		realValue, err = strconv.Atoi(value)
+	case TYPE_FLOAT:
+		realValue, err = strconv.ParseFloat(value, 64)
 	case TYPE_STRING:
-		realValue = string(value)
+		realValue = value
 	default:
 		return STR_FAIL
 	}
@@ -29,7 +25,7 @@ func setEvent(db *gdb, key []byte, valueType int, value []byte) string {
 		return STR_FAIL
 	}
 
-	if db.setNode(string(key), uint8(valueType), realValue) {
+	if db.setNode(key, uint8(valueType), realValue) {
 		return STR_SUCC
 	} else {
 		return STR_FAIL
@@ -39,19 +35,19 @@ func setEvent(db *gdb, key []byte, valueType int, value []byte) string {
 /*
  *get事件
  */
-func getEvent(db *gdb, key []byte) string {
+func getEvent(db *gdb, key string) string {
 	node, _ := db.getNode(string(key))
-    if node == nil {
-        return ""
-    }
-    return interfaceToString(node.valueType, node.value)
+	if node == nil {
+		return ""
+	}
+	return interfaceToString(node.valueType, node.value)
 }
 
 /*
  *delete事件
  */
-func deleteEvent(db *gdb, key []byte) string {
-	if db.deleteNode(string(key)) {
+func deleteEvent(db *gdb, key string) string {
+	if db.deleteNode(key) {
 		return STR_SUCC
 	} else {
 		return STR_FAIL
@@ -61,46 +57,48 @@ func deleteEvent(db *gdb, key []byte) string {
 /*
  *type事件
  */
-func typeEvent(db *gdb, key[]byte) string {
-    node, _ := db.getNode(string(key))
-    if node == nil {
-        return ""
-    }
-    return node.getTypeString()
+func typeEvent(db *gdb, key string) string {
+	node, _ := db.getNode(key)
+	if node == nil {
+		return ""
+	}
+	return node.getTypeString()
 }
 
 /*
  *incr/decr事件
  */
-func incrDecrEvent(db *gdb, key []byte, cr int) string {
-    node, _ := db.getNode(string(key))
-    
-    if node == nil {
-        var value int8
-        if cr == INCR {
-            value = 1 
-        } else {
-            value = -1
-        }
+func incrDecrEvent(db *gdb, key string, cr int) string {
+	node, _ := db.getNode(key)
 
-        if db.setNode(string(key), uint8(TYPE_INT8), value) {
-            ret := strconv.Itoa(int(value))
-            return ret
-        }
-        return STR_FAIL
-    }
+	if node == nil {
+		var value int
+		if cr == INCR {
+			value = 1
+		} else {
+			value = -1
+		}
 
-    valueType := node.getTypeString()
-    
-    if valueType != "int" {
-        return valueType
-    }
-    
-    if cr == INCR {
-        node.value = strconv.Atoi(interfaceToString(node.valueType, node.value)) + 1
-    } else {
-        node.value = strconv.Atoi(interfaceToString(node.valueType, node.value)) - 1
-    }
+		if db.setNode(key, uint8(TYPE_INT), value) {
+			ret := strconv.Itoa(value)
+			return ret
+		}
+		return STR_FAIL
+	}
 
-    return strconv.itoa(node.value)
+	valueType := node.getTypeString()
+
+	if valueType != "int" {
+		return valueType
+	}
+
+	newValue, _ := strconv.Atoi(interfaceToString(node.valueType, node.value))
+	if cr == INCR {
+		node.value = newValue + 1
+		return strconv.Itoa(newValue + 1)
+	} else {
+		node.value = newValue - 1
+		return strconv.Itoa(newValue - 1)
+	}
+
 }

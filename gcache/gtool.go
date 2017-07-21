@@ -71,7 +71,7 @@ func checkType(value []byte) (int, bool) {
 func interfaceToString(valueType uint8, value interface{}) string {
 	switch valueType {
 	case TYPE_INT:
-		return strconv.FormatInt(value.(int), 10)
+		return strconv.Itoa(value.(int))
 	case TYPE_FLOAT:
 		return strconv.FormatFloat(value.(float64), 'f', -1, 64)
 	case TYPE_STRING:

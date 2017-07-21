@@ -66,21 +66,21 @@ func commandEvent() {
 		switch commandArray[0][0] {
 		case SET:
 			/**db key typeValue value*/
-			response, success = setEvent(&db, commandArray[1], int(commandArray[2][0]), commandArray[3])
+			response = setEvent(&db, string(commandArray[1]), int(commandArray[2][0]), string(commandArray[3]))
 		case GET:
 			/**db key*/
-			response = getEvent(&db, commandArray[1])
+			response = getEvent(&db, string(commandArray[1]))
 		case DELETE:
-			response = deleteEvent(&db, commandArray[1])
-        case TYPE:
-            response = typeEvent(&db, commandArray[1])
-        case INCR:
-            response = incrDecrEvent(&db, commandArray[1], INCR)
-        case DECR:
-            response = incrDecrEvent(&db, commandArray[1], DECR)
+			response = deleteEvent(&db, string(commandArray[1]))
+		case TYPE:
+			response = typeEvent(&db, string(commandArray[1]))
+		case INCR:
+			response = incrDecrEvent(&db, string(commandArray[1]), INCR)
+		case DECR:
+			response = incrDecrEvent(&db, string(commandArray[1]), DECR)
 		}
-			
-        gconnArray[gKey].write([]byte(response))
+
+		gconnArray[gKey].write([]byte(response))
 	}
 }
 

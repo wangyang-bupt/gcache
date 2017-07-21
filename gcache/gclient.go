@@ -39,11 +39,15 @@ func handleClientConn(gconn *gconnnect) {
 			case "set":
 				transData, success = setCommand(inputArray)
 			case "get":
-				transData, success = getCommand(inputArray)
+				transData, success = oneParamCommand(inputArray, GET)
 			case "delete":
-				transData, success = deleteCommand(inputArray)
+				transData, success = oneParamCommand(inputArray, DELETE)
 			case "type":
-				transData, success = typeCommand(inputArray)
+				transData, success = oneParamCommand(inputArray, TYPE)
+			case "incr":
+				transData, success = oneParamCommand(inputArray, INCR)
+			case "decr":
+				transData, success = oneParamCommand(inputArray, DECR)
 			default:
 				success = false
 			}
@@ -64,6 +68,48 @@ func handleClientConn(gconn *gconnnect) {
 			fmt.Println("network error!")
 		}
 	}
+}
+
+/*
+ *通用1个参数的命令
+ */
+func oneParamCommand(inputArray [][]byte, action byte) ([]byte, bool) {
+	command := make([]byte, 0, 100)
+
+	if len(inputArray) != 2 {
+		return nil, false
+	}
+
+	//命令参数 key 类型参数 value
+	command = append(command, action)
+	command = append(command, DELIMITER)
+
+	command = append(command, inputArray[1]...)
+	command = append(command, DELIMITER)
+	return command, true
+}
+
+/*
+ *通用2个参数的命令
+ */
+func twoParamCommand(inputArray [][]byte, action byte) ([]byte, bool) {
+	command := make([]byte, 0, 100)
+
+	if len(inputArray) != 3 {
+		return nil, false
+	}
+
+	//命令参数 key 类型参数 value
+	command = append(command, action)
+	command = append(command, DELIMITER)
+
+	command = append(command, inputArray[1]...)
+	command = append(command, DELIMITER)
+
+	command = append(command, inputArray[2]...)
+	command = append(command, DELIMITER)
+
+	return command, true
 }
 
 /*
@@ -98,62 +144,5 @@ func setCommand(inputArray [][]byte) ([]byte, bool) {
 		command = append(command, inputArray[2][1:len(inputArray[2])-1]...)
 	}
 
-	return command, true
-}
-
-/*
- *get命令
- */
-func getCommand(inputArray [][]byte) ([]byte, bool) {
-	command := make([]byte, 0, 100)
-
-	if len(inputArray) != 2 {
-		return nil, false
-	}
-
-	//命令参数 key 类型参数 value
-	command = append(command, GET)
-	command = append(command, DELIMITER)
-
-	command = append(command, inputArray[1]...)
-	command = append(command, DELIMITER)
-	return command, true
-}
-
-/*
- *delete命令
- */
-func deleteCommand(inputArray [][]byte) ([]byte, bool) {
-	command := make([]byte, 0, 100)
-
-	if len(inputArray) != 2 {
-		return nil, false
-	}
-
-	//命令参数 key 类型参数 value
-	command = append(command, DELETE)
-	command = append(command, DELIMITER)
-
-	command = append(command, inputArray[1]...)
-	command = append(command, DELIMITER)
-	return command, true
-}
-
-/*
- *type命令
- */
-func typeCommand(inputArray [][]byte) ([]byte, bool) {
-	command := make([]byte, 0, 100)
-
-	if len(inputArray) != 2 {
-		return nil, false
-	}
-
-	//命令参数 key 类型参数 value
-	command = append(command, TYPE)
-	command = append(command, DELIMITER)
-
-	command = append(command, inputArray[1]...)
-	command = append(command, DELIMITER)
 	return command, true
 }
