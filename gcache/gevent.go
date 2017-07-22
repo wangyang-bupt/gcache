@@ -1,7 +1,11 @@
 package gcache
 
 import (
+	"bufio"
+	"io"
+	"os"
 	"strconv"
+	"strings"
 )
 
 /*
@@ -101,4 +105,73 @@ func incrDecrEvent(db *gdb, key string, cr int) string {
 		return strconv.Itoa(newValue - 1)
 	}
 
+}
+
+/*
+ *backup事件
+ */
+func backupEvent(db *gdb, filename string) string {
+	filePath := BACKUP_FOLDER + "/" + filename
+	_, err := os.Stat(filePath)
+	if err == nil {
+		return filePath + " has been existed"
+	}
+
+	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if checkWarn(err) {
+		return filePath + " cant't be created"
+	}
+	defer file.Close()
+
+	var index int = 1
+	for {
+		if index == db.size {
+			break
+		}
+
+		node := db.gdatas[index]
+
+		for {
+			if node == nil {
+				break
+			}
+			file.WriteString(node.key)
+			file.WriteString(",")
+			file.WriteString(strconv.Itoa(int(node.valueType)))
+			file.WriteString(",")
+			file.WriteString(interfaceToString(node.valueType, node.value))
+			file.WriteString("\n")
+			node = node.next
+		}
+		index++
+	}
+	return STR_SUCC
+}
+
+/*
+ *recovery事件
+ */
+func recoveryEvent(db *gdb, filePath string) string {
+	file, err := os.OpenFile(filePath, os.O_RDONLY, 0644)
+	if checkWarn(err) {
+		return filePath + " cant't be open"
+	}
+	defer file.Close()
+	buf := bufio.NewReader(file)
+
+	for {
+		line, err := buf.ReadString('\n')
+		if err == io.EOF {
+			break
+		}
+		line = strings.TrimSpace(line)
+		param := strings.Split(line, ",")
+		if len(param) != 3 {
+			continue
+		}
+
+		typeValue, _ := strconv.Atoi(param[1])
+		setEvent(db, param[0], typeValue, param[2])
+	}
+	return STR_SUCC
 }

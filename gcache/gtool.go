@@ -75,7 +75,7 @@ func interfaceToString(valueType uint8, value interface{}) string {
 	case TYPE_FLOAT:
 		return strconv.FormatFloat(value.(float64), 'f', -1, 64)
 	case TYPE_STRING:
-		return "\"" + value.(string) + "\""
+		return value.(string)
 	default:
 		return ""
 	}

@@ -48,6 +48,10 @@ func handleClientConn(gconn *gconnnect) {
 				transData, success = oneParamCommand(inputArray, INCR)
 			case "decr":
 				transData, success = oneParamCommand(inputArray, DECR)
+			case "backup":
+				transData, success = oneParamCommand(inputArray, BACKUP)
+			case "recovery":
+				transData, success = oneParamCommand(inputArray, RECOVERY)
 			default:
 				success = false
 			}
@@ -63,6 +67,7 @@ func handleClientConn(gconn *gconnnect) {
 		if err == nil {
 			fmt.Println(string(reponse))
 		} else if err == io.EOF {
+			fmt.Println("server has been closed")
 			break
 		} else if checkWarn(err) {
 			fmt.Println("network error!")
@@ -138,11 +143,7 @@ func setCommand(inputArray [][]byte) ([]byte, bool) {
 	command = append(command, byte(valueType))
 	command = append(command, DELIMITER)
 
-	if valueType != TYPE_STRING {
-		command = append(command, inputArray[2]...)
-	} else {
-		command = append(command, inputArray[2][1:len(inputArray[2])-1]...)
-	}
+	command = append(command, inputArray[2]...)
 
 	return command, true
 }

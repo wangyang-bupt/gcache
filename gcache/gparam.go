@@ -29,16 +29,23 @@ const (
 	/*
 	 *request command
 	 */
-	SET    = 1
-	GET    = 2
-	DELETE = 3
-	TYPE   = 4
-	INCR   = 5
-	DECR   = 6
+	SET      = 1
+	GET      = 2
+	DELETE   = 3
+	TYPE     = 4
+	INCR     = 5
+	DECR     = 6
+	BACKUP   = 7
+	RECOVERY = 8
 	/*
 	 *respone command
 	 */
 	RESPONSE_SUCC  = 255
 	RESPONSE_ERR   = 254
 	RESPONSE_VALUE = 253
+
+	/*
+	 * file folder
+	 */
+	BACKUP_FOLDER = "backup"
 )

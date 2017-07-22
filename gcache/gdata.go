@@ -37,3 +37,7 @@ func (g *gdata) getTypeString() string {
 	}
 	return "unknow"
 }
+
+func (g *gdata) getKey() string {
+	return g.key
+}

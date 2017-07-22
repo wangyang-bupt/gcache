@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"os"
 )
 
 var (
@@ -20,6 +21,7 @@ func init() {
 	commandChan = make(chan []byte, 1000)
 	gconnArray = make(map[string]*gconnnect, MAX_CONNECT)
 	connectNum = 0
+	os.Mkdir(BACKUP_FOLDER, 0644)
 }
 
 func ServerInit() {
@@ -78,6 +80,10 @@ func commandEvent() {
 			response = incrDecrEvent(&db, string(commandArray[1]), INCR)
 		case DECR:
 			response = incrDecrEvent(&db, string(commandArray[1]), DECR)
+		case BACKUP:
+			response = backupEvent(&db, string(commandArray[1]))
+		case RECOVERY:
+			response = recoveryEvent(&db, string(commandArray[1]))
 		}
 
 		gconnArray[gKey].write([]byte(response))
