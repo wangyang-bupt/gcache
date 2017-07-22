@@ -14,4 +14,5 @@ get v1 #获取值
 type v1 #获取类型（int/float/string）
 
 backup filename #(备份)
+
 recovery filename #（恢复备份）
